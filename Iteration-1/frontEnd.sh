@@ -1,6 +1,3 @@
-#Switch to root User
-sudo -i
-
 #Install Nginx
 dnf install nginx -y
 

@@ -1,5 +1,5 @@
 #Install the Mysql Server
-dnf module disable mysql -y
+dnf install mysql-server -y
 
 #Enable and Start the Mysql Server
 systemctl enable mysqld
