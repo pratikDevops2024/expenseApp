@@ -1,15 +1,4 @@
-HEADING() {
-  echo -e "\e[35m$*\e[0m" # Magenta color for the content
-}
-
-STAT() {
-  if [ $1 -eq 0 ]; then
-    echo -e "\e[32mSuccess\e[0m"  # Green color for Success
-  else
-    echo -e "\e[31mFailure\e[0m"  # Red color for Failure
-    exit 2
-  fi
-}
+source common.sh
 
 TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
 LOG_FILE="/tmp/expense_$TIMESTAMP.log"
