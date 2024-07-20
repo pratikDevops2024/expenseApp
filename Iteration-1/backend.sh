@@ -33,7 +33,7 @@ npm install
 dnf install mysql -y
 
 #Load Schema
-mysql -h 172.31.23.215 -uroot -pExpenseApp@1 < /app/schema/backend.sql
+mysql -h localhost -uroot -pExpenseApp@1 < /app/schema/backend.sql
 
 #Start Backend Service
 systemctl daemon-reload
