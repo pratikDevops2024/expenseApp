@@ -19,6 +19,6 @@ cd /usr/share/nginx/html
 unzip /tmp/frontend.zip
 
 #Create Nginx Reverse Proxy Configuration.
-vim /etc/nginx/default.d/expense.conf
+cp expense.conf /etc/nginx/default.d/expense.conf
 
-systemctl restart nginx 
+systemctl restart nginx
