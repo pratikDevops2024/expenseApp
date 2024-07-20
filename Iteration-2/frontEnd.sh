@@ -20,18 +20,18 @@ dnf install nginx -y &>> "$LOG_FILE"
 STAT $?
 
 #Start & Enable Nginx service
-HEADING Starting & Enableing Nginx service
+HEADING "Starting & Enableing Nginx service"
 systemctl enable nginx &>> "$LOG_FILE"
 systemctl start nginx &>> "$LOG_FILE"
 STAT $?
 
 #Remove the default content that web server is serving.
-HEADING Starting & Enableing Nginx service 
+HEADING "Starting & Enableing Nginx service "
 rm -rf /usr/share/nginx/html/* &>> "$LOG_FILE"
 STAT $?
 
 #Create Nginx Reverse Proxy Configuration.
-HEADING Starting & Enableing Nginx service
+HEADING "Starting & Enableing Nginx service"
 cp expense.conf /etc/nginx/default.d/expense.conf &>> "$LOG_FILE"
 STAT $?
 
