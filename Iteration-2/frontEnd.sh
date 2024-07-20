@@ -26,7 +26,7 @@ systemctl start nginx &>> "$LOG_FILE"
 STAT $?
 
 #Remove the default content that web server is serving.
-HEADING Starting & Enableing Nginx service &>> "$LOG_FILE"
+HEADING Starting & Enableing Nginx service 
 rm -rf /usr/share/nginx/html/* &>> "$LOG_FILE"
 STAT $?
 
