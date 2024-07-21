@@ -32,7 +32,6 @@ execute_command() {
         STAT 0
     else
         STAT 1
-        exit 1  # Exit script if command fails
     fi
 }
 
