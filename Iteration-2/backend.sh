@@ -19,8 +19,9 @@ dnf install nodejs -y &>>"$LOG_FILE"
 STAT $?
 
 #Add Expense User
-HEADING Adding expense User
-if [ id expense  ]; then
+HEADING Adding expense
+id expense &>>"$LOG_FILE"
+if [ $1 -ne 0 ]; then
     useradd expense &>>"$LOG_FILE"
 fi
 STAT $?
