@@ -1,75 +1,56 @@
+#!/bin/bash
+
+# Function to handle errors
+error_exit() {
+    echo "Error on line $1: Command '$2' failed with exit code $3" 1>&2
+    exit 1
+}
+
+# Trap errors and call error_exit with the line number and command that failed
+trap 'error_exit $LINENO "$BASH_COMMAND" $?' ERR
+
+# Source common functions and variables
 source common.sh
 
+# Set up logging with timestamped log file
 TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
 LOG_FILE="/tmp/backend_$TIMESTAMP.log"
 
-#Disabled the default Node Version
-HEADING Disabling the default Node Version
-dnf module disable nodejs -y &>>"$LOG_FILE"
-STAT $?
+# Function to execute command with error handling
+execute_command() {
+    local command="$1"
+    local description="$2"
 
-#Enable NodeJS 20
-HEADING Enabling the default Node Version
-dnf module enable nodejs:20 -y &>>"$LOG_FILE"
-STAT $?
+    # Log heading
+    HEADING "$description"
 
-#Install NodeJS
-HEADING Installing Node 
-dnf install nodejs -y &>>"$LOG_FILE"
-STAT $?
+    # Execute command, append output to log file
+    eval "$command" &>> "$LOG_FILE"
 
-#Add Expense User
-HEADING Adding expense
-id expense &>>"$LOG_FILE"
-if [ $? -ne 0 ]; then
-    useradd expense &>>"$LOG_FILE"
-fi
-STAT $?
+    # Check command exit status
+    if [ $? -eq 0 ]; then
+        STAT 0
+    else
+        STAT 1
+        exit 1  # Exit script if command fails
+    fi
+}
 
-#Add the backend service file to run the app as a service.
-HEADING Copying the backend server files
-cp backend.service /etc/systemd/system/backend.service &>>"$LOG_FILE"
-STAT $?
+# Commands with error handling
+execute_command "dnf module disable nodejs -y" "Disabling the default Node Version"
+execute_command "dnf module enable nodejs:20 -y" "Enabling NodeJS 20"
+execute_command "dnf install nodejs -y" "Installing NodeJS"
+execute_command "id expense || useradd expense" "Adding expense user"
+execute_command "cp backend.service /etc/systemd/system/backend.service" "Copying backend server files"
+execute_command "rm -rf /app" "Deleting existing application directory"
+execute_command "mkdir /app" "Creating application directory"
+execute_command "curl -o /tmp/backend.zip https://expense-artifacts.s3.amazonaws.com/expense-backend-v2.zip" "Downloading Backend Code"
+execute_command "cd /app && unzip /tmp/backend.zip" "Extracting Backend Code"
+execute_command "cd /app && npm install" "Downloading NodeJS App Dependencies"
+execute_command "dnf install mysql -y" "Installing MySQL Client"
+execute_command "command to simulate failure" "command to simulate failure"
+execute_command "mysql -h localhost -uroot -pExpenseApp@1 < /app/schema/backend.sql" "Loading Schema"
+execute_command "systemctl daemon-reload && systemctl enable backend && systemctl restart backend" "Starting Backend Server"
 
-#Delete Existing Application Directory
-HEADING Deleting Existing Application Directory
-rm -rf /app &>>"$LOG_FILE"
-STAT $?
-
-#Create Application Directory
-HEADING Creatung Existing Application Directory
-mkdir /app
-STAT $?
-
-#Download Backend Code
-HEADING Downloading Backend Code
-curl -o /tmp/backend.zip https://expense-artifacts.s3.amazonaws.com/expense-backend-v2.zip &>>"$LOG_FILE"
-STAT $?
-
-#Extract Backend code
-HEADING Extracting Backend Code
-cd /app
-unzip /tmp/backend.zip &>>"$LOG_FILE"
-STAT $?
-
-#Download NodeJS App Dependencies
-HEADING Downloading NodeJS App Dependencies
-npm install &>>"$LOG_FILE"
-STAT $?
-
-#Install MySQL Client
-HEADING Installing MySQL Client
-dnf install mysql -y &>>"$LOG_FILE"
-STAT $?
-
-#Load Schema
-HEADING Loading Schema
-mysql -h localhost -uroot -pExpenseApp@1 < /app/schema/backend.sql &>>"$LOG_FILE"
-STAT $?
-
-#Start Backend Service
-HEADING Starting the Backend Server
-systemctl daemon-reload &>>"$LOG_FILE"
-systemctl enable backend &>>"$LOG_FILE"
-systemctl restart backend &>>"$LOG_FILE"
-STAT $?
+# Final success message
+echo "Backend setup completed successfully. Logs are saved in: $LOG_FILE"
