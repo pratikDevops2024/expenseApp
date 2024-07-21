@@ -26,13 +26,6 @@ execute_command() {
 
     # Execute command, append output to log file
     eval "$command" &>> "$LOG_FILE"
-
-    # Check command exit status
-#    if [ $? -eq 0 ]; then
-#        STAT 0
-#    else
-#        STAT 1
-#    fi
 }
 
 # Commands with error handling
@@ -47,7 +40,6 @@ execute_command "curl -o /tmp/backend.zip https://expense-artifacts.s3.amazonaws
 execute_command "cd /app && unzip /tmp/backend.zip" "Extracting Backend Code"
 execute_command "cd /app && npm install" "Downloading NodeJS App Dependencies"
 execute_command "dnf install mysql -y" "Installing MySQL Client"
-execute_command "command to simulate failure" "command to simulate failure"
 execute_command "mysql -h localhost -uroot -pExpenseApp@1 < /app/schema/backend.sql" "Loading Schema"
 execute_command "systemctl daemon-reload && systemctl enable backend && systemctl restart backend" "Starting Backend Server"
 
