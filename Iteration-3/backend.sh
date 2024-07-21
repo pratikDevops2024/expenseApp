@@ -28,11 +28,11 @@ execute_command() {
     eval "$command" &>> "$LOG_FILE"
 
     # Check command exit status
-    if [ $? -eq 0 ]; then
-        STAT 0
-    else
-        STAT 1
-    fi
+#    if [ $? -eq 0 ]; then
+#        STAT 0
+#    else
+#        STAT 1
+#    fi
 }
 
 # Commands with error handling
