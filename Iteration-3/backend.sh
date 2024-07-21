@@ -3,7 +3,7 @@
 # Function to handle errors
 error_exit() {
     echo "Error on line $1: Command '$2' failed with exit code $3" 1>&2
-    exit 1
+    exit 2
 }
 
 # Trap errors and call error_exit with the line number and command that failed
