@@ -21,7 +21,7 @@ STAT $?
 #Add Expense User
 HEADING Adding expense
 id expense &>>"$LOG_FILE"
-if [ $1 -ne 0 ]; then
+if [ $? -ne 0 ]; then
     useradd expense &>>"$LOG_FILE"
 fi
 STAT $?
@@ -63,7 +63,7 @@ dnf install mysql -y &>>"$LOG_FILE"
 STAT $?
 
 #Load Schema
-HEDING Loading Schema
+HEADING Loading Schema
 mysql -h localhost -uroot -pExpenseApp@1 < /app/schema/backend.sql &>>"$LOG_FILE"
 STAT $?
 
